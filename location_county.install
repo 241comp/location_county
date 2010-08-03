@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Installation routines.
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function location_county_schema() {
+  $schema['location_county'] = array(
+    'description' => 'location_county.module {location} supplementary table.',
+    'fields' => array(
+      'lid' => array(
+        'description' => '{location}.lid',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'county' => array(
+        'description' => 'County',
+        'type' => 'varchar',
+        'length' => 45,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('lid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function location_county_install() {
+  drupal_install_schema('location_county');
+
+  // Change weight.
+  db_query("UPDATE {system} SET weight = 1 WHERE name = '%s' AND type = '%s'", 'location_county', 'module');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function location_county_uninstall() {
+  drupal_uninstall_schema('location_county');
+}
